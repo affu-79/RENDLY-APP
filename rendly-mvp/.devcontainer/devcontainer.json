@@ -1,0 +1,22 @@
+{
+  "name": "Rendly MVP",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "postCreateCommand": "bash scripts/setup.sh",
+  "forwardPorts": [3000, 80, 3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend",
+      "onAutoForward": "notify"
+    },
+    "80": {
+      "label": "API Gateway",
+      "onAutoForward": "notify"
+    }
+  }
+}

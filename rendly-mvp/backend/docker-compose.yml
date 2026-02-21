@@ -1,0 +1,238 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: rendly-postgres
+    environment:
+      POSTGRES_DB: rendly_prod
+      POSTGRES_USER: rendly_user
+      POSTGRES_PASSWORD: rendly_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - rendly-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rendly_user -d rendly_prod"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  redis:
+    image: redis:7-alpine
+    container_name: rendly-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - rendly-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  auth-service:
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile
+    container_name: rendly-auth-service
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgresql://rendly_user:rendly_password@postgres:5432/rendly_prod
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3011:3001"
+    cpus: "0.5"
+    mem_limit: 512m
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - rendly-network
+
+  user-service:
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    container_name: rendly-user-service
+    environment:
+      NODE_ENV: development
+      PORT: 3002
+      DATABASE_URL: postgresql://rendly_user:rendly_password@postgres:5432/rendly_prod
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3012:3002"
+    cpus: "0.5"
+    mem_limit: 512m
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - rendly-network
+
+  matching-service:
+    build:
+      context: ./services/matching-service
+      dockerfile: Dockerfile
+    container_name: rendly-matching-service
+    environment:
+      NODE_ENV: development
+      PORT: 3003
+      DATABASE_URL: postgresql://rendly_user:rendly_password@postgres:5432/rendly_prod
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3013:3003"
+    cpus: "0.5"
+    mem_limit: 512m
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - rendly-network
+
+  ccs-service:
+    build:
+      context: ./services/ccs-service
+      dockerfile: Dockerfile
+    container_name: rendly-ccs-service
+    environment:
+      NODE_ENV: development
+      CCS_SERVICE_PORT: 3004
+      DATABASE_URL: postgresql://rendly_user:rendly_password@postgres:5432/rendly_prod
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3004:3004"
+    cpus: "0.5"
+    mem_limit: 512m
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - rendly-network
+
+  video-service:
+    build:
+      context: ./services/video-service
+      dockerfile: Dockerfile
+    container_name: rendly-video-service
+    environment:
+      NODE_ENV: development
+      PORT: 3005
+      DATABASE_URL: postgresql://rendly_user:rendly_password@postgres:5432/rendly_prod
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3005:3005"
+    cpus: "0.5"
+    mem_limit: 512m
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - rendly-network
+
+  moderation-service:
+    build:
+      context: ./services/moderation-service
+      dockerfile: Dockerfile
+    container_name: rendly-moderation-service
+    environment:
+      NODE_ENV: development
+      PORT: 3006
+      DATABASE_URL: postgresql://rendly_user:rendly_password@postgres:5432/rendly_prod
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3006:3006"
+    cpus: "0.5"
+    mem_limit: 512m
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - rendly-network
+
+  huddle-service:
+    build:
+      context: ./services/huddle-service
+      dockerfile: Dockerfile
+    container_name: rendly-huddle-service
+    environment:
+      NODE_ENV: development
+      PORT: 3007
+      DATABASE_URL: postgresql://rendly_user:rendly_password@postgres:5432/rendly_prod
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3007:3007"
+    cpus: "0.5"
+    mem_limit: 512m
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - rendly-network
+
+  admin-service:
+    build:
+      context: ./services/admin-service
+      dockerfile: Dockerfile
+    container_name: rendly-admin-service
+    environment:
+      NODE_ENV: development
+      PORT: 3008
+      DATABASE_URL: postgresql://rendly_user:rendly_password@postgres:5432/rendly_prod
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3008:3008"
+    cpus: "0.5"
+    mem_limit: 512m
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - rendly-network
+
+  api-gateway:
+    image: nginx:alpine
+    container_name: rendly-api-gateway
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - auth-service
+      - user-service
+      - matching-service
+      - ccs-service
+      - video-service
+      - moderation-service
+      - huddle-service
+      - admin-service
+    networks:
+      - rendly-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  rendly-network:
+    driver: bridge
