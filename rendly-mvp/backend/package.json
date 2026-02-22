@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "dev": "lerna run dev --parallel",
+    "dev:auth": "npm run dev --workspace=auth-service",
     "build": "lerna run build",
     "start": "lerna run start --parallel",
     "test": "lerna run test",

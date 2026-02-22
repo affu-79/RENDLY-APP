@@ -13,7 +13,6 @@
     "socket.io": "^4.7.0",
     "@supabase/supabase-js": "^2.38.0",
     "redis": "^4.6.0",
-    "pg": "^8.11.0",
     "dotenv": "^16.3.0"
   },
   "devDependencies": {

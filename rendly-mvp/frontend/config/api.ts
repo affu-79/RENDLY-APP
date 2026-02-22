@@ -1,4 +1,7 @@
+import { getResolvedApiUrl, apiUrlToWsUrl } from "@/lib/resolvedApiUrl";
+
+/** Use getResolvedApiUrl() for runtime base URL (auto-detects 4001 or 80). */
 export const apiConfig = {
-  baseUrl: process.env.NEXT_PUBLIC_API_URL || "",
-  wsUrl: process.env.NEXT_PUBLIC_WS_URL || "",
+  getBaseUrl: getResolvedApiUrl,
+  getWsUrl: () => getResolvedApiUrl().then(apiUrlToWsUrl),
 };

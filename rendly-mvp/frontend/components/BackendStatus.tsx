@@ -1,23 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:80";
+import { getResolvedApiUrl } from "@/lib/resolvedApiUrl";
 
 type Status = "checking" | "ok" | "error";
 
 export default function BackendStatus() {
   const [status, setStatus] = useState<Status>("checking");
   const [message, setMessage] = useState<string>("");
+  const [apiUrl, setApiUrl] = useState<string>("");
 
   useEffect(() => {
     let cancelled = false;
     setStatus("checking");
     setMessage("");
 
-    fetch(`${API_URL}/health`, { method: "GET" })
-      .then((res) => {
+    getResolvedApiUrl()
+      .then((url) => {
         if (cancelled) return;
+        setApiUrl(url);
+        return fetch(`${url}/health`, { method: "GET" });
+      })
+      .then((res) => {
+        if (cancelled || res === undefined) return;
         if (res.ok) {
           setStatus("ok");
           setMessage("Connected");
@@ -58,7 +63,7 @@ export default function BackendStatus() {
           {status === "error" && `Error: ${message}`}
         </span>
       </div>
-      <p className="mt-1 text-xs text-gray-500">{API_URL}</p>
+      {apiUrl && <p className="mt-1 text-xs text-gray-500">{apiUrl}</p>}
     </div>
   );
 }

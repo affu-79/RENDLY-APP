@@ -1,26 +1,28 @@
 import io, { Socket } from "socket.io-client";
-
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "http://localhost:80";
+import { getResolvedApiUrl, apiUrlToWsUrl } from "@/lib/resolvedApiUrl";
 
 class WebSocketService {
   private socket: Socket | null = null;
 
   connect(token: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.socket = io(WS_URL, {
-        auth: { token },
-        path: "/socket.io",
-        reconnection: true,
-        reconnectionDelay: 1000,
-        reconnectionDelayMax: 5000,
-      });
-
-      this.socket.on("connect", () => {
-        console.log("✅ Connected to Central Chat Server");
-        resolve();
-      });
-
-      this.socket.on("connect_error", reject);
+      getResolvedApiUrl()
+        .then(apiUrlToWsUrl)
+        .then((WS_URL) => {
+          this.socket = io(WS_URL, {
+            auth: { token },
+            path: "/socket.io",
+            reconnection: true,
+            reconnectionDelay: 1000,
+            reconnectionDelayMax: 5000,
+          });
+          this.socket.on("connect", () => {
+            console.log("✅ Connected to Central Chat Server");
+            resolve();
+          });
+          this.socket.on("connect_error", reject);
+        })
+        .catch(reject);
     });
   }
 

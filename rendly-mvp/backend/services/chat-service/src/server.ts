@@ -1,11 +1,13 @@
+import path from "path";
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
+dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3004;
+const PORT = process.env.CHAT_SERVICE_PORT || process.env.PORT || 3004;
 
 app.use(cors());
 app.use(express.json());
