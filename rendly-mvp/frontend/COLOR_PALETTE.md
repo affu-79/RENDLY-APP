@@ -1,5 +1,7 @@
 # Rendly Color Palette Guide
 
+**Tagline:** Know Your Why, Find Your Who
+
 ## Palette 1: Modern Dark-to-Cyan
 
 ### Black Scale (with Cyan accents)

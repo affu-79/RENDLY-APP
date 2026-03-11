@@ -1,5 +1,7 @@
 # RENDLY - Global System Architecture & Design Document
 
+**Tagline:** Know Your Why, Find Your Who
+
 ## Executive Summary
 
 Rendly is a next-generation social platform designed to handle **1 billion concurrent users** with **intent-based matching**, real-time video communication (both group huddles and one-on-one), and an advanced AI workflow agent system. This document provides a comprehensive technical blueprint for building a world-class, horizontally-scalable microservices architecture with enterprise-grade security, performance optimization, and AI integration.

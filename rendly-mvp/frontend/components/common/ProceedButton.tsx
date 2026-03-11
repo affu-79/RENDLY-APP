@@ -31,7 +31,7 @@ export function ProceedButton({ shouldShow = true }: ProceedButtonProps) {
 
   return (
     <Link
-      href="/auth/login"
+      href="/login"
       prefetch
       className={buttonClass}
       style={{

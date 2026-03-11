@@ -22,7 +22,7 @@ async function measure(path) {
 
 (async () => {
   console.log('Measuring (target: <500ms per page)...\n');
-  await measure('/auth/login');
+  await measure('/auth/sign-up');
   await measure('/');
   await measure('/auth/callback');
   console.log('\nDone. Stop dev server and run "npm run build" then "npm run start" to test production.');

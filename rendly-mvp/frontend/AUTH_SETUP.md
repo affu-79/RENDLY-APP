@@ -1,5 +1,7 @@
 # OAuth Login Setup (GitHub & LinkedIn)
 
+**Tagline:** Know Your Why, Find Your Who
+
 The "redirect_uri does not match" / "redirect_uri is not associated" errors mean the callback URL your app sends is **not** registered in the provider's dashboard. Fix it by adding the **exact** URL below in both places.
 
 ## Callback URL to register
@@ -47,7 +49,7 @@ After changing redirect URLs in GitHub/LinkedIn (or changing `.env.local`):
 
 1. Stop the dev server (Ctrl+C).
 2. Run `npm run dev` again.
-3. Try **Continue with GitHub** and **Continue with LinkedIn** on `/auth/login`.
+3. Try **Continue with GitHub** and **Continue with LinkedIn** on `/auth/sign-up`.
 
 ---
 

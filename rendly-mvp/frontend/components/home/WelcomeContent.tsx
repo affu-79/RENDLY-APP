@@ -15,7 +15,7 @@ export default function WelcomeContent() {
   }, []);
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-background overflow-hidden">
+    <div className="h-screen max-h-screen w-full flex flex-col items-center justify-center bg-background overflow-hidden">
       <div className="absolute inset-0 bg-gradient-light pointer-events-none" />
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -29,33 +29,39 @@ export default function WelcomeContent() {
         />
       </div>
 
-      <div className="relative z-10 w-full min-h-screen flex flex-col items-center justify-start px-4 sm:px-6 md:px-8 pt-2 sm:pt-4 md:pt-6 pb-12">
-        <div className="relative flex items-center justify-center w-full flex-1 min-h-0 -mt-12 sm:-mt-16 md:-mt-20">
-          <div
-            className="relative flex items-center justify-center"
-            style={{ animation: 'logoZoomIn 2s ease-out forwards' }}
-          >
+      <div className="relative z-10 w-full h-full min-h-0 flex flex-col items-center justify-start overflow-hidden px-4 sm:px-6 md:px-8 pt-2 sm:pt-4 md:pt-6 pb-12">
+        <div className="relative flex items-center justify-center w-full flex-1 min-h-0 overflow-visible -mt-12 sm:-mt-16 md:-mt-20">
+          <div className="relative flex flex-col items-center justify-center gap-6 sm:gap-8 md:gap-10">
             <div
-              className="relative w-[min(92vw,560px)] h-[min(92vw,560px)] sm:w-[min(88vw,640px)] sm:h-[min(88vw,640px)] md:w-[min(85vw,720px)] md:h-[min(85vw,720px)]"
-              style={{ animation: 'logoPulse 3.5s ease-in-out infinite 2s' }}
+              className="relative flex items-center justify-center z-0 lg:-mb-32 lg:-translate-y-[270px]"
+              style={{ animation: 'logoZoomIn 2s ease-out forwards' }}
             >
-              <Image
-                src="/images/logo.svg"
-                alt="Rendly"
-                fill
-                className="object-contain"
-                priority
-                sizes="(max-width: 768px) 92vw, 720px"
-              />
+              <div
+                className="relative w-[min(92vw,560px)] h-[min(92vw,560px)] sm:w-[min(88vw,640px)] sm:h-[min(88vw,640px)] md:w-[min(85vw,720px)] md:h-[min(85vw,720px)] lg:w-[min(92vw,960px)] lg:h-[min(92vw,960px)]"
+                style={{ animation: 'logoPulse 3.5s ease-in-out infinite 2s' }}
+              >
+                <Image
+                  src="/images/logo.svg"
+                  alt="Rendly"
+                  fill
+                  className="object-contain"
+                  priority
+                  sizes="(max-width: 768px) 92vw, (max-width: 1024px) 720px, 960px"
+                />
+              </div>
             </div>
-          </div>
 
-          <div
-            className="absolute inset-x-0 bottom-[8%] sm:bottom-[10%] md:bottom-[12%] flex justify-center items-center pointer-events-none"
-            style={{ pointerEvents: showButton ? 'auto' : 'none' }}
-          >
-            <div className="pointer-events-auto shrink-0">
-              <ProceedButton shouldShow={showButton} />
+            <p className="tagline-home relative z-10 text-center font-semibold tracking-wide opacity-0 w-full max-w-[90vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl px-3 sm:px-4 pb-0 lg:pb-[100px] lg:top-[-200px] text-lg min-[380px]:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-[2.5rem]">
+              Know Your Why, Find Your Who
+            </p>
+
+            <div
+              className="relative z-10 flex justify-center items-center pointer-events-none min-h-[52px] lg:top-[-200px]"
+              style={{ pointerEvents: showButton ? 'auto' : 'none' }}
+            >
+              <div className="pointer-events-auto shrink-0">
+                <ProceedButton shouldShow={showButton} />
+              </div>
             </div>
           </div>
         </div>

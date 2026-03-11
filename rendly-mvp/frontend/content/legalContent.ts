@@ -265,3 +265,72 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
     ],
   },
 ];
+
+export const USER_POLICY_EFFECTIVE = '1 March 2025';
+export const USER_POLICY_LAST_UPDATED = '1 March 2025';
+
+/** User policy: acceptable use, account rules, community guidelines (for Settings and signup reference). */
+export const USER_POLICY_SECTIONS: LegalSection[] = [
+  {
+    title: 'Purpose & Scope',
+    level: 2,
+    paragraphs: [
+      `This User Policy outlines the rules and guidelines for using ${COMPANY.appName}. It works together with our Terms of Service and Privacy Policy. By using Rendly, you agree to follow this policy.`,
+      `Effective date: ${USER_POLICY_EFFECTIVE}. Last updated: ${USER_POLICY_LAST_UPDATED}. Contact: ${COMPANY.supportEmail}, ${COMPANY.ceoEmail}.`,
+    ],
+  },
+  {
+    title: 'Account & Registration',
+    level: 2,
+    paragraphs: [
+      'You must provide accurate, current information when creating an account. One account per person; do not create multiple accounts to evade restrictions. You are responsible for keeping your password and login details secure. Notify us immediately at team@anoryxtechsolutions.com if you suspect unauthorized access.',
+    ],
+  },
+  {
+    title: 'Acceptable Use',
+    level: 2,
+    paragraphs: [
+      'Use Rendly for its intended purpose: building genuine connections, participating in matches, messaging, video/voice calls, and huddles. You must not:',
+    ],
+    list: [
+      'Harass, bully, threaten, or intimidate others',
+      'Post or share illegal, explicit, or harmful content',
+      'Impersonate any person or entity',
+      'Spam, phish, or attempt to defraud others',
+      'Scrape, automate, or abuse APIs without permission',
+      'Circumvent security or access controls',
+      'Use the platform for commercial solicitation unless permitted',
+    ],
+    paragraphsAfterList: [
+      'We may remove content, issue warnings, suspend, or permanently ban accounts for violations.',
+    ],
+  },
+  {
+    title: 'Community Guidelines',
+    level: 2,
+    paragraphs: [
+      'Be respectful in all interactions. Respect others’ privacy and consent. Do not share others’ personal information without permission. Report harassment, fraud, or policy violations via the in-app Report feature or by contacting team@anoryxtechsolutions.com. We review reports and take action in line with this policy and the Terms of Service.',
+    ],
+  },
+  {
+    title: 'Content Standards',
+    level: 2,
+    paragraphs: [
+      'Profile information, messages, and shared media must not contain illegal material, hate speech, or content that incites violence. We reserve the right to remove content that violates these standards or that we deem harmful to the community.',
+    ],
+  },
+  {
+    title: 'Enforcement',
+    level: 2,
+    paragraphs: [
+      'We enforce this policy consistently. Violations may result in content removal, temporary suspension, or permanent account termination. Serious or repeated violations may be reported to law enforcement. If you believe an action was taken in error, contact us at team@anoryxtechsolutions.com or afnan.ceo@anoryxtechsolutions.com.',
+    ],
+  },
+  {
+    title: 'Updates',
+    level: 2,
+    paragraphs: [
+      'We may update this User Policy. Material changes will be communicated via email or in-app notice. Continued use after changes constitutes acceptance.',
+    ],
+  },
+];

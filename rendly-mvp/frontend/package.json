@@ -4,7 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
+    "dev:3002": "next dev -p 3002",
+    "dev:3003": "next dev -p 3003",
     "build": "next build",
+    "clean": "node -e \"const fs=require('fs');const p='.next';if(fs.existsSync(p)){fs.rmSync(p,{recursive:true});console.log('Removed .next');}else{console.log('.next not found');}\"",
     "start": "next start -p 3001",
     "lint": "next lint",
     "format": "prettier --write .",

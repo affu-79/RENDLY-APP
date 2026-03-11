@@ -4,6 +4,8 @@
 
 **Rendly** is a revolutionary intent-based social matching platform that connects people in real-time based on shared interests, goals, and activities. Unlike existing social networks, Rendly focuses on **meaningful human connections** through instant video calls and group huddles, making it the "Omegle meets Tinder meets Discord" for the next generation.
 
+**Tagline:** Know Your Why, Find Your Who
+
 **TL;DR:**
 - **What**: Intent-based video matching + real-time communication platform
 - **Who**: 18-35 year old globally connected users seeking authentic connections

@@ -1,5 +1,7 @@
 # Rendly MVP - Quick Start Guide
 
+**Tagline:** Know Your Why, Find Your Who
+
 ## Prerequisites
 
 - Node.js 20+
@@ -66,7 +68,7 @@ cd frontend && npm run dev
 | Auth Service       | http://localhost:3001 |
 | User Service       | http://localhost:3002 |
 | Matching Service   | http://localhost:3003 |
-| CCS (Central Chat) | http://localhost:3004 |
+| Chat Service (REST + Socket.IO) | http://localhost:4002 |
 | Video Service      | http://localhost:3005 |
 | Moderation Service | http://localhost:3006 |
 | Huddle Service     | http://localhost:3007 |

@@ -5,12 +5,20 @@ export const LINKEDIN_STORAGE_KEY = "rendly_oauth_linkedin";
 /** Session key: when user already verified GitHub and is now verifying LinkedIn, we link to that user. */
 export const LINK_TO_GITHUB_ID_KEY = "rendly_link_to_github_id";
 
+/** JWT from email/username + password login. */
+export const RENDLY_SESSION_TOKEN = "rendly_session_token";
+
+/** SessionStorage + localStorage key for cached current user (cleared on logout so dashboard loads fresh after re-login). */
+export const RENDLY_CURRENT_USER_CACHE_KEY = "rendly_current_user_cache";
+
 type StoredAuth = { verified?: boolean; user?: unknown; token?: string | null };
 
-/** Returns the first available JWT from GitHub or LinkedIn localStorage. Used for /api/users/me. */
+/** Returns the first available JWT; always prefers session (password login) when present so every account gets correct dashboard/profile. Then GitHub, then LinkedIn. Used for /api/users/me. */
 export function getStoredAuthToken(): string | null {
   if (typeof window === "undefined") return null;
   try {
+    const session = localStorage.getItem(RENDLY_SESSION_TOKEN);
+    if (session && session.trim()) return session.trim();
     const g = localStorage.getItem(GITHUB_STORAGE_KEY);
     if (g) {
       const d: StoredAuth = JSON.parse(g);
@@ -25,4 +33,19 @@ export function getStoredAuthToken(): string | null {
     // ignore
   }
   return null;
+}
+
+/** Clears all auth-related data from localStorage and sessionStorage (for logout). */
+export function clearAuthStorage(): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.removeItem(GITHUB_STORAGE_KEY);
+    localStorage.removeItem(LINKEDIN_STORAGE_KEY);
+    localStorage.removeItem(LINK_TO_GITHUB_ID_KEY);
+    localStorage.removeItem(RENDLY_SESSION_TOKEN);
+    sessionStorage.removeItem(RENDLY_CURRENT_USER_CACHE_KEY);
+    localStorage.removeItem(RENDLY_CURRENT_USER_CACHE_KEY);
+  } catch {
+    // ignore
+  }
 }

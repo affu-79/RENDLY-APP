@@ -1,5 +1,7 @@
 # RENDLY - Complete Documentation Index & Quick Reference
 
+**Tagline:** Know Your Why, Find Your Who
+
 ## 📚 Documentation Overview
 
 You now have **4 comprehensive documents** totaling **10,256 lines** that provide everything needed to build Rendly MVP in 20-25 days.

@@ -7,7 +7,7 @@ import {
   computeCodeChallenge,
   LINKEDIN_PKCE_STORAGE_KEY,
 } from '@/lib/pkce';
-import { GITHUB_STORAGE_KEY, LINK_TO_GITHUB_ID_KEY } from '@/lib/auth-storage';
+import { GITHUB_STORAGE_KEY, LINK_TO_GITHUB_ID_KEY, getStoredAuthToken } from '@/lib/auth-storage';
 
 function getRedirectUri() {
   if (typeof window === 'undefined') return '';
@@ -17,8 +17,10 @@ function getRedirectUri() {
   return `${window.location.origin}/auth/callback`;
 }
 
+export type OAuthFlow = 'login' | 'signup';
+
 export function useOAuth() {
-  const redirectToGitHub = useCallback(() => {
+  const redirectToGitHub = useCallback((flow: OAuthFlow = 'signup') => {
     const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
     if (!clientId) {
       console.error('NEXT_PUBLIC_GITHUB_CLIENT_ID is not set');
@@ -26,12 +28,12 @@ export function useOAuth() {
     }
     const redirectUri = encodeURIComponent(getRedirectUri());
     const scope = encodeURIComponent('read:user user:email');
-    const state = 'github';
+    const state = flow === 'login' ? 'github_login' : 'github';
     const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
     window.location.href = url;
   }, []);
 
-  const redirectToLinkedIn = useCallback(async () => {
+  const redirectToLinkedIn = useCallback(async (flow: OAuthFlow = 'signup') => {
     const clientId = process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID;
     if (!clientId) {
       console.error('NEXT_PUBLIC_LINKEDIN_CLIENT_ID is not set');
@@ -52,7 +54,7 @@ export function useOAuth() {
     }
     const redirectUri = encodeURIComponent(getRedirectUri());
     const scope = encodeURIComponent('openid profile email');
-    const state = 'linkedin';
+    const state = flow === 'login' ? 'linkedin_login' : 'linkedin';
     const params = new URLSearchParams({
       response_type: 'code',
       client_id: clientId,
@@ -73,17 +75,35 @@ export function useOAuth() {
         provider === 'github'
           ? `${baseUrl}/api/auth/github/callback`
           : `${baseUrl}/api/auth/linkedin/callback`;
-      const body: { code: string; code_verifier?: string; link_to_github_id?: string } = { code };
+      const body: { code: string; code_verifier?: string; link_to_github_id?: string; client_ip?: string } = { code };
       if (provider === 'linkedin' && options?.codeVerifier) body.code_verifier = options.codeVerifier;
       if (provider === 'linkedin' && options?.linkToGithubId) body.link_to_github_id = options.linkToGithubId;
+      try {
+        const ipRes = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(3000) });
+        if (ipRes.ok) {
+          const ipData = await ipRes.json();
+          if (ipData?.ip) body.client_ip = ipData.ip;
+        }
+      } catch {
+        // ignore; backend will use request IP
+      }
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (body.client_ip) headers['X-Client-IP'] = body.client_ip;
       const res = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(body),
       });
       if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err?.message || `Failed to authenticate with ${provider}`);
+        const text = await res.text();
+        let message = `Failed to authenticate with ${provider}.`;
+        try {
+          const err = text ? JSON.parse(text) : {};
+          message = err?.message || err?.error_description || err?.error || message;
+        } catch {
+          if (text && text.length < 200) message = text;
+        }
+        throw new Error(message);
       }
       return res.json();
     },
@@ -92,15 +112,18 @@ export function useOAuth() {
 
   const continueToDashboard = useCallback(async () => {
     const baseUrl = await getResolvedApiUrl();
+    const token = typeof window !== 'undefined' ? getStoredAuthToken() : null;
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers.Authorization = `Bearer ${token}`;
     const res = await fetch(`${baseUrl}/api/auth/continue`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({}),
       credentials: 'include',
     });
     if (!res.ok) throw new Error('Failed to continue');
     const data = await res.json();
-    return data.redirectUrl || '/auth/profile-setup';
+    return data.redirectUrl || '/profile-setup';
   }, []);
 
   return {

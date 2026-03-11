@@ -161,6 +161,50 @@ a {
   }
 }
 
+@keyframes taglineFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes taglineGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 12px rgba(80, 125, 188, 0.25));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 20px rgba(80, 125, 188, 0.4));
+  }
+}
+
+/* Home tagline: distinctive font, gradient, appears after logo; responsive */
+.tagline-home {
+  font-family: var(--font-chillax);
+  background: linear-gradient(135deg, #3b3355 0%, #507dbc 50%, #3b3355 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  word-break: keep-all;
+  hyphens: none;
+  animation: taglineFadeIn 1s ease-out 2s forwards, taglineGlow 3s ease-in-out 3.2s infinite;
+}
+
+@media (max-width: 380px) {
+  .tagline-home {
+    letter-spacing: 0.02em;
+  }
+}
+
 /* Skeleton & loader (CSS-only for fast initial compile) */
 @keyframes skeletonPulse {
 

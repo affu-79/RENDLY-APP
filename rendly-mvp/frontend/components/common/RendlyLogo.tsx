@@ -64,18 +64,30 @@ export function RendlyLogo({ className = 'w-48 h-48' }: RendlyLogoProps) {
         RENDLY
       </text>
 
-      {/* Tagline */}
+      {/* Tagline: Know Your Why, Find Your Who */}
       <text
         x="100"
-        y="182"
-        fontSize="9"
+        y="178"
+        fontSize="7"
         textAnchor="middle"
         fill="#507dbc"
         fontFamily="Inter, system-ui, sans-serif"
-        letterSpacing="1.5"
-        opacity="0.7"
+        letterSpacing="0.5"
+        opacity="0.8"
       >
-        CONNECT • MATCH • ENGAGE
+        Know Your Why,
+      </text>
+      <text
+        x="100"
+        y="186"
+        fontSize="7"
+        textAnchor="middle"
+        fill="#507dbc"
+        fontFamily="Inter, system-ui, sans-serif"
+        letterSpacing="0.5"
+        opacity="0.8"
+      >
+        Find Your Who
       </text>
     </svg>
   );

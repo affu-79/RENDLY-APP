@@ -12,7 +12,7 @@ const LINKEDIN_STORAGE_KEY = 'rendly_oauth_linkedin';
 export default function CallbackPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { exchangeCode } = useOAuth();
+  const { exchangeCode, continueToDashboard } = useOAuth();
   const [status, setStatus] = useState<'exchanging' | 'done' | 'error'>('exchanging');
   const [error, setError] = useState<string | null>(null);
 
@@ -26,7 +26,8 @@ export default function CallbackPage() {
       return;
     }
 
-    const provider = state === 'github' ? 'github' : state === 'linkedin' ? 'linkedin' : null;
+    const isLoginFlow = state === 'github_login' || state === 'linkedin_login';
+    const provider = state === 'github' || state === 'github_login' ? 'github' : state === 'linkedin' || state === 'linkedin_login' ? 'linkedin' : null;
     if (!provider) {
       setError('Invalid authorization state.');
       setStatus('error');
@@ -51,6 +52,7 @@ export default function CallbackPage() {
       .then((data: { user?: Record<string, unknown>; accessToken?: string }) => {
         if (cancelled) return;
         const key = provider === 'github' ? GITHUB_STORAGE_KEY : LINKEDIN_STORAGE_KEY;
+        const otherKey = provider === 'github' ? LINKEDIN_STORAGE_KEY : GITHUB_STORAGE_KEY;
         try {
           localStorage.setItem(
             key,
@@ -60,6 +62,7 @@ export default function CallbackPage() {
               token: data?.accessToken ?? null,
             })
           );
+          localStorage.removeItem(otherKey);
         } catch {
           // ignore storage errors
         }
@@ -69,7 +72,17 @@ export default function CallbackPage() {
           console.log('[Rendly] User has verified LinkedIn successfully. Data has been updated in the users table in Supabase.');
         }
         setStatus('done');
-        router.replace(`/auth/login?verified=${provider}`);
+        if (isLoginFlow) {
+          continueToDashboard()
+            .then((redirectUrl) => {
+              if (!cancelled) router.replace(redirectUrl);
+            })
+            .catch(() => {
+              if (!cancelled) router.replace('/dashboard');
+            });
+        } else {
+          router.replace(`/auth/sign-up?verified=${provider}`);
+        }
       })
       .catch((err: Error) => {
         if (cancelled) return;
@@ -99,9 +112,9 @@ export default function CallbackPage() {
   if (status === 'error') {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
-        <p className="text-center text-dusty_grape font-medium">{error}</p>
+        <p className="text-center text-dusty_grape font-medium max-w-md">{error}</p>
         <a
-          href="/auth/login"
+          href="/login"
           className="mt-4 px-4 py-2 rounded-lg bg-space_indigo text-white text-sm font-medium hover:brightness-110 transition-all"
         >
           Back to Login

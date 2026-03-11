@@ -15,6 +15,8 @@ type AuthContextValue = {
   setTermsChecked: (v: boolean) => void;
   setGithubVerified: (payload: { user?: Record<string, unknown>; token?: string }) => void;
   setLinkedinVerified: (payload: { user?: Record<string, unknown>; token?: string }) => void;
+  clearGithub: () => void;
+  clearLinkedin: () => void;
   isLoading: boolean;
   setIsLoading: (v: boolean) => void;
   errorMessage: string | null;
@@ -60,6 +62,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
+  const clearGithub = useCallback(() => setGithubState(initialState), []);
+  const clearLinkedin = useCallback(() => setLinkedinState(initialState), []);
+
   const clearError = useCallback(() => setErrorMessage(null), []);
 
   const canContinue = useMemo(
@@ -75,6 +80,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setTermsChecked,
       setGithubVerified,
       setLinkedinVerified,
+      clearGithub,
+      clearLinkedin,
       isLoading,
       setIsLoading,
       errorMessage,
@@ -88,6 +95,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       termsChecked,
       setGithubVerified,
       setLinkedinVerified,
+      clearGithub,
+      clearLinkedin,
       isLoading,
       errorMessage,
       canContinue,

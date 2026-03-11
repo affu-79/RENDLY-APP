@@ -22,6 +22,13 @@ const nextConfig = {
     NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL,
   },
   // compiler.removeConsole not supported with Turbopack; omit to use --turbo
+  webpack: (config, { dev }) => {
+    if (dev) {
+      // Use memory cache to avoid ENOENT / missing chunk (e.g. 276.js) on Windows
+      config.cache = { type: 'memory' };
+    }
+    return config;
+  },
 };
 
 module.exports = nextConfig;

@@ -1,5 +1,7 @@
 # RENDLY - DevOps, Infrastructure & Deployment Strategy
 
+**Tagline:** Know Your Why, Find Your Who
+
 ## 1. Infrastructure Overview
 
 ### 1.1 Cloud Architecture (AWS)

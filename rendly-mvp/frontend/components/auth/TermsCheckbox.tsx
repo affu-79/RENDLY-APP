@@ -18,7 +18,13 @@ export default function TermsCheckbox() {
           <input
             type="checkbox"
             checked={termsChecked}
-            onChange={(e) => setTermsChecked(e.target.checked)}
+            onChange={(e) => {
+              if (e.target.checked) {
+                termsModal.open();
+              } else {
+                setTermsChecked(false);
+              }
+            }}
             className="w-5 h-5 rounded border-2 border-[#dae3e5] bg-white_1 text-space_indigo focus:ring-2 focus:ring-glaucous focus:ring-offset-2 transition-all duration-150 cursor-pointer accent-space_indigo"
             aria-label="I agree to terms and privacy policy"
           />

@@ -1,5 +1,7 @@
 # RENDLY - Frontend Architecture & UI/UX Design Document
 
+**Tagline:** Know Your Why, Find Your Who
+
 ## 1. Frontend Tech Stack
 
 ### 1.1 Core Technologies

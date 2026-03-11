@@ -9,6 +9,8 @@
   "scripts": {
     "dev": "lerna run dev --parallel",
     "dev:auth": "npm run dev --workspace=auth-service",
+    "free-port:auth": "powershell -Command \"Get-NetTCPConnection -LocalPort 4001 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }\"",
+    "free-ports": "powershell -Command \"@(4001) | ForEach-Object { Get-NetTCPConnection -LocalPort $_ -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue } }\"",
     "build": "lerna run build",
     "start": "lerna run start --parallel",
     "test": "lerna run test",
